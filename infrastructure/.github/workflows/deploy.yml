@@ -1,0 +1,42 @@
+name: Deploy Terraform to Azure Shell
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  terraform-deploy:
+    name: Deploy via Azure Cloud Shell
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Azure CLI
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Upload Terraform files to Azure Cloud Shell (via SCP)
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.AZURE_SHELL_HOST }}
+        username: ${{ secrets.AZURE_SHELL_USER }}
+        key: ${{ secrets.AZURE_SHELL_SSH_KEY }}
+        source: "*.tf"
+        target: /home/${{ secrets.AZURE_SHELL_USER }}/terraform
+
+    - name: Run Terraform in Azure Cloud Shell
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.AZURE_SHELL_HOST }}
+        username: ${{ secrets.AZURE_SHELL_USER }}
+        key: ${{ secrets.AZURE_SHELL_SSH_KEY }}
+        script: |
+          cd ~/terraform
+          terraform init
+          terraform plan -out=tfplan
+          terraform apply -auto-approve tfplan
