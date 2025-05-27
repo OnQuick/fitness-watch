@@ -1,10 +1,13 @@
 from azure.cosmos import CosmosClient
+import os
+from dotenv import load_dotenv
 
-# Zahardkodowane dane do Cosmos DB
-COSMOS_ENDPOINT = "https://cosmosdb-account-iothub.documents.azure.com:443/"
-COSMOS_KEY = "***REMOVED***"
-DATABASE_NAME = "telemetry"
-CONTAINER_NAME = "metrics2"
+load_dotenv()
+
+COSMOS_ENDPOINT = os.getenv("COSMOS_ENDPOINT")
+COSMOS_KEY = os.getenv("COSMOS_KEY")
+DATABASE_NAME = os.getenv("COSMOS_DATABASE_NAME")
+CONTAINER_NAME = os.getenv("COSMOS_CONTAINER_NAME")
 
 def get_cosmos_client():
     """Tworzy i zwraca klienta Cosmos DB"""
