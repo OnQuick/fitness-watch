@@ -3,7 +3,6 @@ import logging
 from fastapi import FastAPI, Request, Query
 from fastapi.responses import JSONResponse
 import asyncio
-from azure.iot.hub import IoTHubRegistryManager
 import os
 from dotenv import load_dotenv
 from .cosmos_client import get_fitness_data
