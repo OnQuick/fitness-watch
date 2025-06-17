@@ -2,8 +2,10 @@ from azure.cosmos import CosmosClient
 import os
 from dotenv import load_dotenv
 
+# Ładowanie zmiennych środowiskowych
 load_dotenv()
 
+# Pobieranie konfiguracji z zmiennych środowiskowych
 COSMOS_ENDPOINT = os.getenv("COSMOS_ENDPOINT")
 COSMOS_KEY = os.getenv("COSMOS_KEY")
 DATABASE_NAME = os.getenv("COSMOS_DATABASE_NAME")
