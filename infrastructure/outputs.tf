@@ -6,10 +6,24 @@ output "iot_hub_connection_string" {
     sensitive = true
 
 }
-output "storage_account_name" {
-    value = azurerm_storage_account.storage.name
+
+output "cosmos_db_account_name" {
+    value = azurerm_cosmosdb_account.cosmos.name
 }
-output "blob_container_name" {
-    value = azurerm_storage_container.container.name
-  
+
+output "cosmos_db_database_name" {
+    value = azurerm_cosmosdb_sql_database.database.name
+}
+
+output "cosmos_db_container_name" {
+    value = azurerm_cosmosdb_sql_container.container.name
+}
+
+output "cosmos_db_connection_string" {
+    value = azurerm_cosmosdb_account.cosmos.connection_strings[0]
+    sensitive = true
+}
+
+output "stream_analytics_job_name" {
+    value = azurerm_stream_analytics_job.stream_analytics.name
 }
