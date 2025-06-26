@@ -13,13 +13,23 @@ variable "iot_hub_name" {
   default     = "tf-iot"
 }
 
-variable "storage_account_name" {
-  description = "Base name of the Storage Account (suffix will be added)"
-  default     = "tfstg"
+variable "stream_analytics_job_name" {
+  description = "Base name of the Stream Analytics job (suffix will be added)"
+  default     = "tf-stream-analytics"
 }
 
-variable "container_name" {
-  description = "Base name of the blob container (suffix will be added)"
+variable "cosmos_db_account_name" {
+  description = "Base name of the Cosmos DB account (suffix will be added)"
+  default     = "tf-cosmos"
+}
+
+variable "cosmos_db_database_name" {
+  description = "Name of the Cosmos DB database"
+  default     = "fitness-data"
+}
+
+variable "cosmos_db_container_name" {
+  description = "Name of the Cosmos DB container"
   default     = "telemetry"
 }
 
