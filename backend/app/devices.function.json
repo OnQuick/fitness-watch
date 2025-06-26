@@ -1,13 +1,13 @@
 {
-  "scriptFile": "fitness_data.py",
+  "scriptFile": "devices.py",
   "bindings": [
     {
       "authLevel": "anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["get", "post"],
-      "route": "fitness-data"
+      "methods": ["get"],
+      "route": "devices"
     },
     {
       "type": "http",
