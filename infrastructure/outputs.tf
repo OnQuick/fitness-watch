@@ -27,3 +27,15 @@ output "cosmos_db_connection_string" {
 output "stream_analytics_job_name" {
     value = azurerm_stream_analytics_job.stream_analytics.name
 }
+
+output "function_app_name" {
+    value = azurerm_linux_function_app.function_app.name
+}
+
+output "function_app_url" {
+    value = "https://${azurerm_linux_function_app.function_app.default_hostname}"
+}
+
+output "function_app_principal_id" {
+    value = azurerm_linux_function_app.function_app.identity[0].principal_id
+}

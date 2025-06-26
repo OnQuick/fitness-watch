@@ -20,12 +20,12 @@ locals {
 }
 
 resource "azurerm_resource_group" "iot_rg" {
-  name     = var.resource_group_name
-  location = var.location
+  name     = "fitness-watch-rg"
+  location = "uksouth"
 }
 
 resource "azurerm_iothub" "iothub" {
-  name                = "${var.iot_hub_name}${local.suffix}"
+  name                = "fitness-hub${local.suffix}"
   resource_group_name = azurerm_resource_group.iot_rg.name
   location            = azurerm_resource_group.iot_rg.location
 
@@ -33,14 +33,10 @@ resource "azurerm_iothub" "iothub" {
     name     = "F1"
     capacity = 1
   }
-
-  tags = {
-    purpose = "telemetry"
-  }
 }
 
 resource "azurerm_iothub_shared_access_policy" "policy" {
-  name                = "terraform-policy"
+  name                = "device-policy"
   resource_group_name = azurerm_resource_group.iot_rg.name
   iothub_name         = azurerm_iothub.iothub.name
 
@@ -52,7 +48,7 @@ resource "azurerm_iothub_shared_access_policy" "policy" {
 
 # Cosmos DB Account
 resource "azurerm_cosmosdb_account" "cosmos" {
-  name                = "${var.cosmos_db_account_name}${local.suffix}"
+  name                = "fitness-cosmos${local.suffix}"
   location            = azurerm_resource_group.iot_rg.location
   resource_group_name = azurerm_resource_group.iot_rg.name
   offer_type          = "Standard"
@@ -72,22 +68,18 @@ resource "azurerm_cosmosdb_account" "cosmos" {
     location          = azurerm_resource_group.iot_rg.location
     failover_priority = 0
   }
-
-  tags = {
-    purpose = "telemetry-storage"
-  }
 }
 
 # Cosmos DB Database
 resource "azurerm_cosmosdb_sql_database" "database" {
-  name                = var.cosmos_db_database_name
+  name                = "fitness-data"
   resource_group_name = azurerm_cosmosdb_account.cosmos.resource_group_name
   account_name        = azurerm_cosmosdb_account.cosmos.name
 }
 
 # Cosmos DB Container
 resource "azurerm_cosmosdb_sql_container" "container" {
-  name                  = var.cosmos_db_container_name
+  name                  = "telemetry"
   resource_group_name   = azurerm_cosmosdb_account.cosmos.resource_group_name
   account_name          = azurerm_cosmosdb_account.cosmos.name
   database_name         = azurerm_cosmosdb_sql_database.database.name
@@ -96,11 +88,9 @@ resource "azurerm_cosmosdb_sql_container" "container" {
 
   indexing_policy {
     indexing_mode = "consistent"
-
     included_path {
       path = "/*"
     }
-
     excluded_path {
       path = "/\"_etag\"/?"
     }
@@ -109,7 +99,7 @@ resource "azurerm_cosmosdb_sql_container" "container" {
 
 # Stream Analytics Job
 resource "azurerm_stream_analytics_job" "stream_analytics" {
-  name                                     = "${var.stream_analytics_job_name}${local.suffix}"
+  name                                     = "fitness-stream${local.suffix}"
   resource_group_name                      = azurerm_resource_group.iot_rg.name
   location                                 = azurerm_resource_group.iot_rg.location
   compatibility_level                      = "1.2"
@@ -134,10 +124,6 @@ resource "azurerm_stream_analytics_job" "stream_analytics" {
     FROM [iothub-input]
     WHERE device_id IS NOT NULL
 QUERY
-
-  tags = {
-    purpose = "telemetry-processing"
-  }
 }
 
 # Stream Analytics Input - IoT Hub
@@ -146,7 +132,7 @@ resource "azurerm_stream_analytics_stream_input_iothub" "iothub_input" {
   stream_analytics_job_name    = azurerm_stream_analytics_job.stream_analytics.name
   resource_group_name          = azurerm_resource_group.iot_rg.name
   endpoint                     = "messages/events"
-  shared_access_policy_name    = "terraform-policy"
+  shared_access_policy_name    = "device-policy"
   shared_access_policy_key     = azurerm_iothub_shared_access_policy.policy.primary_key
   iothub_namespace             = azurerm_iothub.iothub.name
   eventhub_consumer_group_name = "$Default"
@@ -170,11 +156,11 @@ resource "azurerm_stream_analytics_output_cosmosdb" "cosmos_output" {
 
 # App Service Plan dla Azure Functions
 resource "azurerm_service_plan" "function_plan" {
-  name                = "${var.function_app_name}-plan${local.suffix}"
+  name                = "fitness-plan${local.suffix}"
   resource_group_name = azurerm_resource_group.iot_rg.name
   location            = azurerm_resource_group.iot_rg.location
   os_type             = "Linux"
-  sku_name            = "Y1"  # Consumption plan
+  sku_name            = "Y1"
 }
 
 # Storage Account dla Azure Functions
@@ -188,7 +174,7 @@ resource "azurerm_storage_account" "function_storage" {
 
 # Azure Function App
 resource "azurerm_linux_function_app" "function_app" {
-  name                       = "${var.function_app_name}${local.suffix}"
+  name                       = "fitness-api${local.suffix}"
   resource_group_name        = azurerm_resource_group.iot_rg.name
   location                   = azurerm_resource_group.iot_rg.location
   service_plan_id            = azurerm_service_plan.function_plan.id
@@ -210,8 +196,4 @@ resource "azurerm_linux_function_app" "function_app" {
     "FUNCTIONS_EXTENSION_VERSION" = "~4"
     "WEBSITE_RUN_FROM_PACKAGE" = "1"
   }
-
-  tags = {
-    purpose = "fitness-api"
-  }
-}
+} 

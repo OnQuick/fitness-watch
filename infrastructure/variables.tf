@@ -33,3 +33,8 @@ variable "cosmos_db_container_name" {
   default     = "telemetry"
 }
 
+variable "function_app_name" {
+  description = "Base name of the Azure Function App (suffix will be added)"
+  default     = "tf-fitness-api"
+}
+
