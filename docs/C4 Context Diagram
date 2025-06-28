@@ -1,0 +1,15 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(user, "User", "Monitoruje dane z opaski fitness przez aplikację")
+
+System(system, "Fitness Telemetry System", "Zbiera i udostępnia dane telemetryczne z opasek fitness")
+
+System_Ext(azure_iot_hub, "Azure IoT Hub", "Odbiera dane z opasek")
+System_Ext(azure_portal, "Azure Portal", "Konfiguracja i zarządzanie zasobami")
+
+Rel(user, system, "Wyświetla dane o zdrowiu")
+Rel(system, azure_iot_hub, "Odbiera dane z IoT Hub")
+Rel(system, azure_portal, "Zarządzanie zasobami")
+
+@enduml
