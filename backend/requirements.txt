@@ -3,4 +3,3 @@ azure-cosmos==4.5.1
 python-dotenv==0.20.0
 pydantic==1.9.2
 requests==2.31.0
-azure-iot-hub==2.3.0
