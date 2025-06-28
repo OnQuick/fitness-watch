@@ -1,0 +1,21 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "Uses the system via an app or device")
+
+System_Boundary(s1, "Fitness Telemetry System") {
+  Container(iot_device, "Fitness Band", "Device", "Sends telemetry data (heart rate, steps, etc.) every 5 minutes")
+  Container(iot_hub, "Azure IoT Hub", "IoT Hub", "Receives telemetry data from fitness bands")
+  Container(stream_analytics, "Azure Stream Analytics", "Stream Analytics", "Processes and filters telemetry data")
+  Container(cosmosdb, "Azure Cosmos DB", "NoSQL Database", "Stores telemetry data for later access")
+  Container(function_app, "Azure Function App", "Python/Azure Functions", "Exposes REST API to access telemetry data")
+}
+
+Rel(user, function_app, "Uses")
+Rel(iot_device, iot_hub, "Sends telemetry via MQTT/HTTPS")
+Rel(iot_hub, stream_analytics, "Streams data to")
+Rel(stream_analytics, cosmosdb, "Writes processed data to")
+Rel(function_app, cosmosdb, "Reads data from")
+
+@enduml
+
