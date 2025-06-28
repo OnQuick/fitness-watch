@@ -1,0 +1,244 @@
+{
+  "info": {
+    "_postman_id": "fitness-watch-api-collection",
+    "name": "Fitness Watch API",
+    "description": "Kolekcja endpointów dla API Fitness Watch - zarządzanie danymi fitness z urządzeń noszonych",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Root",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/",
+          "host": ["{{base_url}}"],
+          "path": ["api", ""]
+        },
+        "description": "Informacja o API i lista dostępnych endpointów"
+      },
+      "response": []
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/health",
+          "host": ["{{base_url}}"],
+          "path": ["api", "health"]
+        },
+        "description": "Sprawdzenie czy API działa poprawnie"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Fitness Data",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/fitness-data?device_id={{device_id}}&limit=100&start_date=2024-01-01&end_date=2024-12-31",
+          "host": ["{{base_url}}"],
+          "path": ["api", "fitness-data"],
+          "query": [
+            {
+              "key": "device_id",
+              "value": "{{device_id}}",
+              "description": "ID urządzenia (opcjonalne)"
+            },
+            {
+              "key": "limit",
+              "value": "100",
+              "description": "Liczba rekordów do zwrócenia (domyślnie 100)"
+            },
+            {
+              "key": "start_date",
+              "value": "2024-01-01",
+              "description": "Data początkowa (YYYY-MM-DD)"
+            },
+            {
+              "key": "end_date",
+              "value": "2024-12-31",
+              "description": "Data końcowa (YYYY-MM-DD)"
+            }
+          ]
+        },
+        "description": "Pobieranie danych fitness z opcjonalnymi filtrami"
+      },
+      "response": []
+    },
+    {
+      "name": "Add Fitness Data",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"device_id\": \"{{device_id}}\",\n  \"heart_rate\": 75,\n  \"steps\": 8500,\n  \"calories\": 450,\n  \"distance\": 6.2,\n  \"sleep_hours\": 7.5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/fitness-data",
+          "host": ["{{base_url}}"],
+          "path": ["api", "fitness-data"]
+        },
+        "description": "Dodawanie nowych danych fitness"
+      },
+      "response": []
+    },
+    {
+      "name": "Update Fitness Data",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"heart_rate\": 80,\n  \"steps\": 9000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/fitness-data?id={{record_id}}&device_id={{device_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "fitness-data"],
+          "query": [
+            {
+              "key": "id",
+              "value": "{{record_id}}",
+              "description": "ID rekordu do aktualizacji"
+            },
+            {
+              "key": "device_id",
+              "value": "{{device_id}}",
+              "description": "ID urządzenia"
+            }
+          ]
+        },
+        "description": "Aktualizacja istniejących danych fitness"
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Fitness Data",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/fitness-data?id={{record_id}}&device_id={{device_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "fitness-data"],
+          "query": [
+            {
+              "key": "id",
+              "value": "{{record_id}}",
+              "description": "ID rekordu do usunięcia"
+            },
+            {
+              "key": "device_id",
+              "value": "{{device_id}}",
+              "description": "ID urządzenia"
+            }
+          ]
+        },
+        "description": "Usuwanie danych fitness"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Fitness Stats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/fitness-stats?device_id={{device_id}}&days=7",
+          "host": ["{{base_url}}"],
+          "path": ["api", "fitness-stats"],
+          "query": [
+            {
+              "key": "device_id",
+              "value": "{{device_id}}",
+              "description": "ID urządzenia (opcjonalne)"
+            },
+            {
+              "key": "days",
+              "value": "7",
+              "description": "Liczba dni do analizy (domyślnie 7)"
+            }
+          ]
+        },
+        "description": "Pobieranie statystyk fitness"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Devices",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/devices",
+          "host": ["{{base_url}}"],
+          "path": ["api", "devices"]
+        },
+        "description": "Pobieranie listy wszystkich urządzeń"
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:7071",
+      "type": "string",
+      "description": "Podstawowy URL API"
+    },
+    {
+      "key": "device_id",
+      "value": "watch-001",
+      "type": "string",
+      "description": "ID urządzenia do testowania"
+    },
+    {
+      "key": "record_id",
+      "value": "example-uuid",
+      "type": "string",
+      "description": "ID rekordu do testowania aktualizacji/usuwania"
+    }
+  ]
+}
